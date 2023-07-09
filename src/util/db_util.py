@@ -4,10 +4,10 @@ import pymysql
 import pandas as pd
 
 def pandas_to_mysql(df: pd.DataFrame, schema: str,table_name: str) -> None:
-    host="xxxxx"
+    host="xxx"
     # port="3306"
     user="sra"
-    pwd="xxxx"
+    pwd="xxx"
     sql_engine= sa.create_engine(f"mysql+pymysql://{user}:{pwd}@{host}:3306",pool_recycle=3600)
     db_connection = sql_engine.connect()
     try:

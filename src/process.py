@@ -112,8 +112,11 @@ def process_data(config: DictConfig):
     print(df.columns)
     
     ingesting_df = df[required_cols]
-    ingesting_df["tel_1"]=ingesting_df["tel_raw"].apply(lambda x: str(x).split(",")[0] if len(str(x).split(","))>0 else "")
-    ingesting_df["tel_2"]=ingesting_df["tel_raw"].apply(lambda x: str(x).split(",")[1] if len(str(x).split(","))==2 else "")
+    ingesting_df["tel_1"]=ingesting_df["tel_raw"].apply(lambda x: str(x).split(",")[0] if len(str(x).split(","))>0 else None)
+    ingesting_df["tel_2"]=ingesting_df["tel_raw"].apply(lambda x: str(x).split(",")[1] if len(str(x).split(","))==2 else None)
+    replace_dash_fnc  = lambda x: str(x).replace("-","") if "-" in str(x) else None
+    ingesting_df["tel_1_search"]=ingesting_df["tel_1"].apply(replace_dash_fnc)
+    ingesting_df["tel_2_search"]=ingesting_df["tel_2"].apply(replace_dash_fnc)
     print(ingesting_df.columns)
     assert len(required_set.symmetric_difference(set(ingesting_df.columns)))==0, "schema is not the same as destination"
     pandas_to_mysql(df=ingesting_df, schema="5000s",table_name="members")
